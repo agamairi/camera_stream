@@ -8,7 +8,7 @@ wss.on('connection', ws => {
     console.log('Received: %s', message);
     ws.send(`Echo: ${message}`);
   });
-
+  // send message on successful connection
   ws.send('Hello! I am your WebSocket server.');
 });
 
