@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>hello world</h1>
+
+<video id="videoPlayer" controls autoplay></video>
+
+<script>
+var video = document.getElementById('videoPlayer');
+var ws = new WebSocket('ws://192.168.50.99:8080');
+
+// Assuming the server sends over video segments in a format the <video> can play
+// This example uses Media Source Extensions (MSE) to feed data into the <video> element
+if ('MediaSource' in window) {
+  var mediaSource = new MediaSource();
+  video.src = URL.createObjectURL(mediaSource);
+  
+  mediaSource.addEventListener('sourceopen', function () {
+    var sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vp8"'); // Example MIME type
+    ws.onmessage = function(event) {
+      var videoData = new Uint8Array(event.data); // Assuming the data is in a binary format
+      sourceBuffer.appendBuffer(videoData);
+    };
+  });
+} else {
+  console.error('MediaSource not supported in this browser.');
+}
+</script>
+</body>
+</html>
