@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html>
 <body>
-
-<video id="video" controls autoplay></video>
-
-<script>
-var video = document.getElementById('video');
-var ws = new WebSocket("ws://localhost:5678/");
-
-ws.onmessage = function(event) {
-    // Assuming the video feed is being received as a Blob
-    var blob = new Blob([event.data], {type: "video/mp4"});
-    var url = URL.createObjectURL(blob);
-    video.src = url;
-};
-</script>
-
+  <img id="frame" width="640" height="480">
+  <script>
+    const frameElement = document.getElementById('frame');
+  
+    const ws = new WebSocket('ws://localhost:8080');
+    ws.binaryType = 'blob'; // Set the expected data type to 'blob'
+    ws.onmessage = function(event) {
+      const url = URL.createObjectURL(event.data);
+      frameElement.src = url;
+    };
+  </script>
+  
+  
 </body>
 </html>
