@@ -1,18 +1,29 @@
 <!DOCTYPE html>
 <html>
 <body>
-  <img id="frame" width="640" height="480">
-  <script>
-    const frameElement = document.getElementById('frame');
-  
-    const ws = new WebSocket('ws://localhost:8080');
-    ws.binaryType = 'blob'; // Set the expected data type to 'blob'
-    ws.onmessage = function(event) {
-      const url = URL.createObjectURL(event.data);
-      frameElement.src = url;
-    };
-  </script>
-  
-  
+<input id="messageInput" type="text">
+<button onclick="sendMessage()">Send</button>
+<div id="messages"></div>
+<div id="base64"></div>
+
+<script>
+  let socket = new WebSocket('ws://192.168.1.223:8080');
+
+  socket.onmessage = function(event) {
+    console.log(event.data);  // Log the received data
+    if (event.data.slice(0,5) !== 'Hello') {  // Only update if the message is not the initial greeting
+      document.getElementById('base64').innerText = event.data;
+    }
+  };
+
+  function sendMessage() {
+    let messageInput = document.getElementById('messageInput');
+    socket.send(messageInput.value);
+    messageInput.value = '';
+  }
+</script>
 </body>
 </html>
+
+
+
