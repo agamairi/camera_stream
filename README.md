@@ -41,4 +41,5 @@ What I am working on:
 - send the image over the network
 
 Known Issues:
-[] Unable to decode the image thru the web app
+
+- [ ] Unable to decode the image thru the web app
