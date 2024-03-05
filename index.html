@@ -1,29 +1,36 @@
 <!DOCTYPE html>
 <html>
 <body>
-<input id="messageInput" type="text">
-<button onclick="sendMessage()">Send</button>
-<div id="messages"></div>
-<div id="base64"></div>
+  <!-- Input element for the user to enter a message -->
+  <input id="messageInput" type="text">
+  <!-- Button to send the user's message -->
+  <button onclick="sendMessage()">Send</button>
+  <!-- Div to display received messages -->
+  <div id="messages"></div>
+  <!-- Image element to display the received images -->
+  <img id="frame">
 
-<script>
-  let socket = new WebSocket('ws://192.168.1.223:8080');
+  <!-- WebSocket connection to the specified URL -->
+  <script>
+    let socket = new WebSocket('ws://192.168.1.223:8080');
+    let img = document.getElementById('frame'); // Reference to the image element
 
-  socket.onmessage = function(event) {
-    console.log(event.data);  // Log the received data
-    if (event.data.slice(0,5) !== 'Hello') {  // Only update if the message is not the initial greeting
-      document.getElementById('base64').innerText = event.data;
+    // Event listener for incoming messages
+    socket.onmessage = function(event) {
+      console.log(event.data); // Log the received data
+
+      // If the message is not the initial greeting, update the image source
+      if (event.data.slice(0, 5) !== 'Hello') {
+        img.src = 'data:image/png;base64,' + event.data;
+      }
     }
-  };
 
-  function sendMessage() {
-    let messageInput = document.getElementById('messageInput');
-    socket.send(messageInput.value);
-    messageInput.value = '';
-  }
-</script>
+    // Function to send the user's message
+    function sendMessage() {
+      let messageInput = document.getElementById('messageInput');
+      socket.send(messageInput.value); // Send the content of the message input
+      messageInput.value = ''; // Clear the message input after sending
+    }
+  </script>
 </body>
 </html>
-
-
-
